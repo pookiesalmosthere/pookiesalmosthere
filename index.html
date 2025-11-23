@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Pookie's Almost Here</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Optional: cute font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at top, #ffe6f2, #080016 65%);
+      color: #ffffff;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 700px;
+      width: 100%;
+      background: rgba(10, 4, 40, 0.7);
+      border-radius: 24px;
+      padding: 32px 24px 28px;
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .heart {
+      width: 14px;
+      height: 14px;
+      position: relative;
+      display: inline-block;
+      transform: translateY(1px);
+    }
+
+    .heart::before,
+    .heart::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 7px;
+      width: 7px;
+      height: 11px;
+      background: #ff6ba5;
+      border-radius: 7px 7px 0 0;
+      transform-origin: 0 100%;
+    }
+
+    .heart::before {
+      transform: rotate(-45deg);
+    }
+
+    .heart::after {
+      left: 0;
+      transform-origin: 100% 100%;
+      transform: rotate(45deg);
+    }
+
+    h1 {
+      margin-top: 18px;
+      font-size: clamp(32px, 5vw, 42px);
+      line-height: 1.1;
+      font-weight: 600;
+    }
+
+    .subtitle {
+      margin-top: 10px;
+      font-size: 16px;
+      opacity: 0.9;
+    }
+
+    .datetime {
+      margin-top: 10px;
+      font-size: 14px;
+      opacity: 0.75;
+    }
+
+    .timer {
+      margin-top: 26px;
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .time-box {
+      min-width: 80px;
+      padding: 14px 10px 10px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.06);
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06);
+    }
+
+    .time-value {
+      font-size: 26px;
+      font-weight: 600;
+    }
+
+    .time-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      opacity: 0.75;
+      margin-top: 3px;
+    }
+
+    .footer-text {
+      margin-top: 20px;
+      font-size: 13px;
+      opacity: 0.8;
+    }
+
+    .highlight {
+      font-weight: 600;
+      color: #ffb9dd;
+    }
+
+    .arrived-message {
+      margin-top: 24px;
+      font-size: 22px;
+      font-weight: 600;
+      color: #ffb9dd;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="badge">
+      <span class="heart"></span>
+      <span>Christmas in New York</span>
+    </div>
+
+    <h1>Pookie's Almost Here</h1>
+
+    <p class="subtitle">
+      Counting down until she lands in New York.
+    </p>
+
+    <p class="datetime">
+      Landing time
+      <span class="highlight">Wednesday, November 26, 2025</span><br />
+      at <span class="highlight">3:48 PM</span> Eastern (New York time).
+    </p>
+
+    <div class="timer" id="timer">
+      <div class="time-box">
+        <div class="time-value" id="days">0</div>
+        <div class="time-label">Days</div>
+      </div>
+      <div class="time-box">
+        <div class="time-value" id="hours">00</div>
+        <div class="time-label">Hours</div>
+      </div>
+      <div class="time-box">
+        <div class="time-value" id="minutes">00</div>
+        <div class="time-label">Minutes</div>
+      </div>
+      <div class="time-box">
+        <div class="time-value" id="seconds">00</div>
+        <div class="time-label">Seconds</div>
+      </div>
+    </div>
+
+    <div class="arrived-message" id="arrivedMessage" style="display:none;">
+      She is here. Go find your pookie.
+    </div>
+
+    <p class="footer-text">
+      Website: <span class="highlight">pookiesalmosthere.com</span>
+    </p>
+  </div>
+
+  <script>
+    // Target time: Wed Nov 26 2025, 3:48 PM Eastern (EST = UTC-5)
+    // That is 20:48 UTC on 2025-11-26
+    const targetDate = new Date(Date.UTC(2025, 10, 26, 20, 48, 0)); // month is 0-based, so 10 = November
+
+    const daysEl = document.getElementById("days");
+    const hoursEl = document.getElementById("hours");
+    const minutesEl = document.getElementById("minutes");
+    const secondsEl = document.getElementById("seconds");
+    const arrivedMessage = document.getElementById("arrivedMessage");
+    const timerEl = document.getElementById("timer");
+
+    function updateCountdown() {
+      const now = new Date();
+      const diff = targetDate.getTime() - now.getTime();
+
+      if (diff <= 0) {
+        // She has arrived
+        daysEl.textContent = "0";
+        hoursEl.textContent = "00";
+        minutesEl.textContent = "00";
+        secondsEl.textContent = "00";
+
+        arrivedMessage.style.display = "block";
+        timerEl.style.opacity = "0.25";
+
+        clearInterval(intervalId);
+        return;
+      }
+
+      const totalSeconds = Math.floor(diff / 1000);
+      const days = Math.floor(totalSeconds / (60 * 60 * 24));
+      const hours = Math.floor((totalSeconds % (60 * 60 * 24)) / (60 * 60));
+      const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
+      const seconds = totalSeconds % 60;
+
+      daysEl.textContent = days;
+      hoursEl.textContent = String(hours).padStart(2, "0");
+      minutesEl.textContent = String(minutes).padStart(2, "0");
+      secondsEl.textContent = String(seconds).padStart(2, "0");
+    }
+
+    // Initial call and interval
+    updateCountdown();
+    const intervalId = setInterval(updateCountdown, 1000);
+  </script>
+</body>
+</html>
